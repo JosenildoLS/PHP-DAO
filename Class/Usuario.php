@@ -8,9 +8,8 @@ class Usuario {
     private $dtCadastro;
 
     public function loadByID($id) {
-        $slq = new Slq();
-
-        $results = $slq->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(":ID" => $id));
+        $sql = new Sql();
+        $results = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(":ID" => $id));
 
         // Confirmo se existe retorno
         if (count($results > 0)) {

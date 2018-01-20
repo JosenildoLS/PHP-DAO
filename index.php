@@ -28,15 +28,12 @@
         /*
           // Retorna o registro caso tenha sido atenticado
           $login = new Usuario();
-          $login->login("josenildo", "12345678909");
+          $login->login("Login1", "123456");
           echo $login;
          */
 
         // Faz um insert e retorna o id através de uma PROCEDURE
-        $aluno = new Usuario();
-        $aluno->setDesLogin("Juan");
-        $aluno->setDesSenha('123456');
-
+        $aluno = new Usuario('Aluno1', '123456');
         $aluno->insert();
         echo $aluno;
 

@@ -7,6 +7,12 @@ class Usuario {
     private $desSenha;
     private $dtCadastro;
 
+    public function __construct($deslogin = "", $dessenha = "") {
+
+        $this->setDesLogin($deslogin);
+        $this->setDesSenha($dessenha);
+    }
+
     // Retorna apenas um registro
     public function loadByID($id) {
         $sql = new Sql();

@@ -7,21 +7,77 @@ class Usuario {
     private $desSenha;
     private $dtCadastro;
 
+    // Retorna apenas um registro
     public function loadByID($id) {
         $sql = new Sql();
         $results = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID", array(":ID" => $id));
 
         // Confirmo se existe retorno
-        if (count($results > 0)) {
-
-            // Como o PDO retorna um array de array, então pegamos o indece 0
-            $row = $results[0];
-
-            $this->setIdUsuario($row['idusuario']);
-            $this->setDesLogin($row['deslogin']);
-            $this->setDesSenha($row['dessenha']);
-            $this->setDtCadastro(new DateTime($row['dtcadastro']));
+        if (count($results) > 0) {
+            $this->setData($results[0]);
         }
+    }
+
+    // Retorna o Registro caso o usuario seja autenticado
+    public function login($login, $password) {
+        $this->setDesLogin($login);
+        $this->setDesSenha($password);
+
+        $sql = new Sql();
+        $results = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN AND dessenha = :PASSWORD ", array(
+            ":LOGIN" => $this->getDesLogin(),
+            ":PASSWORD" => $this->getDesSenha()
+        ));
+
+        // Confirmo se existe retorno
+        if (count($results) > 0) {
+            $this->setData($results[0]);
+        } else {
+            throw new Exception("Usuário e/ou Senha Inválidos");
+        }
+    }
+
+    public function insert() {
+
+        $sql = new Sql();
+        $row = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN ", array(":LOGIN" => $this->getDesLogin()));
+
+        // Verifico se já existe um registro
+        if (count($row) > 0) {
+            throw new Exception("Este Login já existe");
+        } else {
+            $results = $sql->select("CALL sp_usuarios_insert(:LOGIN, :PASSWORD)", array(
+                ":LOGIN" => $this->getDesLogin(),
+                ":PASSWORD" => $this->getDesSenha()
+            ));
+
+            if (count($results) > 0) {
+                $this->setData($results[0]);
+            } else {
+                throw new Exception("Login não inserido");
+            }
+        }
+    }
+
+    public function setData($data) {
+
+        $this->setIdUsuario($data['idusuario']);
+        $this->setDesLogin($data['deslogin']);
+        $this->setDesSenha($data['dessenha']);
+        $this->setDtCadastro(new DateTime($data['dtcadastro']));
+    }
+
+    // Retorna todos os registros
+    public static function getList() {
+        $sql = new Sql();
+        return $sql->select("SELECT * FROM tb_usuarios ORDER BY deslogin");
+    }
+
+    // Retorna apenas os registros encontrados que contenham o valor da pesquisa
+    public static function getSearch($login) {
+        $sql = new Sql();
+
+        return $sql->select("SELECT * FROM tb_usuarios WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(":SEARCH" => "%" . $login . "%"));
     }
 
     public function __toString() {
@@ -58,7 +114,7 @@ class Usuario {
     }
 
     public function setDesSenha($desSenha) {
-        $this->desSenha = $desSenha;
+        $this->desSenha = password_hash($desSenha, PASSWORD_BCRYPT);
     }
 
     public function setDtCadastro($dtCadastro) {

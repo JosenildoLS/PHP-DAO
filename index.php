@@ -32,12 +32,17 @@
           echo $login;
          */
 
-        // Faz um insert e retorna o id através de uma PROCEDURE
-        $aluno = new Usuario('Aluno1', '123456');
-        $aluno->insert();
-        echo $aluno;
+        /*
+          // Faz um insert e retorna o id através de uma PROCEDURE
+          $aluno = new Usuario('Aluno1', '123456');
+          $aluno->insert();
+          echo $aluno;
+         */
 
-
+        $ususario = new Usuario();
+        $ususario->loadByID(16);
+        $ususario->update('professor', '123456');
+        echo $ususario;
         ?>
     </body>
 </html>

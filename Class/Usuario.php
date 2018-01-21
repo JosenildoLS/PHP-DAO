@@ -77,6 +77,18 @@ class Usuario {
         ));
     }
 
+    public function delete() {
+        $sql = new Sql();
+        $sql->query("DELETE FROM tb_usuarios WHERE idusuario = :ID", array(
+            ":ID" => $this->getIdUsuario()
+        ));
+
+        $this->setIdUsuario(0);
+        $this->setDesLogin("");
+        $this->setDesSenha("");
+        $this->setDtCadastro(new DateTime());
+    }
+
     public function setData($data) {
 
         $this->setIdUsuario($data['idusuario']);
@@ -132,7 +144,7 @@ class Usuario {
     }
 
     public function setDesSenha($desSenha) {
-        $this->desSenha = password_hash($desSenha, PASSWORD_BCRYPT);
+        $this->desSenha = $desSenha;
     }
 
     public function setDtCadastro($dtCadastro) {

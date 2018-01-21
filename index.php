@@ -39,9 +39,18 @@
           echo $aluno;
          */
 
+        /*
+          // Atualiza o registro do banco de dados
+          $ususario = new Usuario();
+          $ususario->loadByID(16);
+          $ususario->update('professor', '123456');
+          echo $ususario;
+         */
+
+        // Atualiza o registro do banco de dados
         $ususario = new Usuario();
-        $ususario->loadByID(16);
-        $ususario->update('professor', '123456');
+        $ususario->loadByID(17);
+        $ususario->delete();
         echo $ususario;
         ?>
     </body>

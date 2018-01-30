@@ -49,8 +49,8 @@
 
         // Atualiza o registro do banco de dados
         $ususario = new Usuario();
-        $ususario->loadByID(17);
-        $ususario->delete();
+        $ususario->loadByID(19);
+//        $ususario->delete();
         echo $ususario;
         ?>
     </body>
